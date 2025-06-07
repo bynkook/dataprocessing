@@ -35,8 +35,8 @@ df_sorted = df.sort_values(by=['시스템 명칭','테이블 ID'], ascending=[Tr
 # 컬럼 출력 순서 재정의
 new_column_order = ['시스템 명칭', '테이블 ID', '표준 테이블 명칭', '컬럼 IT 명칭', '컬럼 명칭', '표준 컬럼 명칭', '전체 ROW 개수']
 df_reordered_sorted = df_sorted[new_column_order]
-# 결과 일부 출력
-table = tabulate(df_reordered_sorted[1500:1520], headers='keys', tablefmt='psql')
+# 결과 일부 출력(tabulate)
+table = tabulate(df_reordered_sorted[1500:1520], headers='keys', tablefmt='psql', numalign="left", showindex=False)
 print(table)
 
 # 최종 결과를 CSV 파일로 저장

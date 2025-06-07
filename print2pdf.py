@@ -76,7 +76,7 @@ def printer(
     df_limited = truncate_cell_values(df, max_width=max_col_width)
 
     # tabulate 텍스트 생성
-    table_text = tabulate(df_limited, headers="keys", tablefmt="psql", showindex=show_index)
+    table_text = tabulate(df_limited, headers="keys", tablefmt="psql", showindex=show_index, numalign="left")
     lines = table_text.splitlines()
     header_lines = lines[:3]
     data_lines = lines[3:]
