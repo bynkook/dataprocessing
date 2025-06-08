@@ -27,6 +27,8 @@ df4.drop(columns=['SEQ_NO'], inplace=True, errors='ignore')
 # 모든 dataframe을 하나로 합침(NaN 유지한 수직병합 - SQL의 UNION ALL과 동일)
 # ignore_index=True 옵션을 사용하여 인덱스를 재설정
 df = pd.concat([df1, df2, df3, df4], ignore_index=True)
+# object 타입 열 안에 있는 None 값을 명시적으로 np.nan으로 통일
+df = df.replace({None: np.nan})
 
 # 컬럼 값 기준으로 정렬
 # ignore_index=True 옵션을 사용하여 인덱스를 재설정
@@ -56,5 +58,6 @@ print2pdf.printer(
     show_index=False,
     pagesize='A4',
     orientation='landscape',
-    max_col_width=30
-)
+    max_col_width=30,
+    line_height=8
+    )
