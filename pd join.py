@@ -22,7 +22,7 @@ def left_join(df1, df2, on):
 def right_join(df1, df2, on):
 	return pd.merge(df1, df2, how='right', on=on)
 
-if __name__ = '__main__':
+if __name__ == '__main__':
 
 	# Sample data
 	df1 = pd.DataFrame({
