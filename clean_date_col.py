@@ -35,3 +35,11 @@ def clean_date_column(df, col_name, return_invalid=False, drop_time=True, inplac
         df_invalid = df[df['PARSED_DATE'].isna()]
         return df, df_invalid
     return df
+
+"""
+df_cleaned = (
+    df
+    .drop_duplicates()
+    .pipe(clean_date_column, 'DATE', drop_time=True)
+)
+"""
