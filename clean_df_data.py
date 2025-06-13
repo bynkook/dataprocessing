@@ -10,6 +10,13 @@ Last updated: 2025-06-13 22:00:00
 5. any filter application it shall be case-insensitive.
 """
 
+# user-defined filters
+filter_bad_value = ["", "none", "null", "nan", "-", "*"]
+column_name_map = {
+    'numeric': ['_no', '_amt', '_rat'],
+    'date': ['_ym', '_dtc', '_dtm'],
+}
+
 def clean_value(val, date_format=False):
     """
     Clean value to numeric or datetime format, handling known invalid entries.
@@ -44,11 +51,7 @@ def type_of_column(col):
     return 'string'
 
 if __name__ == "__main__":
-    filter_bad_value = ["", "none", "null", "nan", "-", "*"]
-    column_name_map = {
-        'numeric': ['_no', '_amt', '_rat'],
-        'date': ['_ym', '_dtc', '_dtm'],
-    }
+    
     df1 = pd.DataFrame({
         'col_NO1': [1, 2, 3,'4-'],
         'col_ym1': ['202501', '20250301','2025-03-02', np.nan],
