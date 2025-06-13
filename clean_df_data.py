@@ -10,25 +10,6 @@ Last updated: 2025-06-13 22:00:00
 5. any filter application it shall be case-insensitive.
 """
 
-filter_bad_value = ["", "none", "null", "nan", "-", "*"]
-
-column_name_map = {
-    'numeric': ['_no', '_amt', '_rat'],
-    'date': ['_ym', '_dtc', '_dtm'],
-}
-
-df1 = pd.DataFrame({
-    'col_NO1': [1, 2, 3,'4-'],
-    'col_ym1': ['202501', '20250301','2025-03-02', np.nan],
-    'col_str1': ['a', '*', 'c', 1]
-})
-df2 = pd.DataFrame({
-    'col_no2': [1, '2', 3,'4*'],
-    'col_ym2': ['20250101141414', '2025-03-01 14:14:14', '2025010216', None],
-    'col_str2': ['a', '-', 'c', 2]
-})
-df_list = [df1, df2]
-
 def clean_value(val, date_format=False):
     """
     Clean value to numeric or datetime format, handling known invalid entries.
@@ -62,18 +43,33 @@ def type_of_column(col):
             return dtype
     return 'string'
 
-for idx, dfi in enumerate(df_list):
-    col_type_map = {col: type_of_column(col) for col in dfi.columns}
-    if len(set(dfi.columns)) != len(set(col_type_map)):
-        print(f"WARNING: Column classification issue in df{idx}")
-
-    for col, dtype in col_type_map.items():
-        if dtype == 'numeric':
-            dfi[col] = dfi[col].apply(clean_value)
-        elif dtype == 'date':
-            dfi[col] = dfi[col].apply(lambda x: clean_value(x, date_format=True))
-        else:
-            dfi[col] = dfi[col].replace(filter_bad_value, np.nan)
-
-print(df1)
-print(df2)
+if __name__ == ""__main__"":
+    filter_bad_value = ["", "none", "null", "nan", "-", "*"]
+    column_name_map = {
+        'numeric': ['_no', '_amt', '_rat'],
+        'date': ['_ym', '_dtc', '_dtm'],
+    }
+    df1 = pd.DataFrame({
+        'col_NO1': [1, 2, 3,'4-'],
+        'col_ym1': ['202501', '20250301','2025-03-02', np.nan],
+        'col_str1': ['a', '*', 'c', 1]
+    })
+    df2 = pd.DataFrame({
+        'col_no2': [1, '2', 3,'4*'],
+        'col_ym2': ['20250101141414', '2025-03-01 14:14:14', '2025010216', None],
+        'col_str2': ['a', '-', 'c', 2]
+    })
+    df_list = [df1, df2]
+    for idx, dfi in enumerate(df_list):
+        col_type_map = {col: type_of_column(col) for col in dfi.columns}
+        if len(set(dfi.columns)) != len(set(col_type_map)):
+            print(f"WARNING: Column classification issue in df{idx}")
+        for col, dtype in col_type_map.items():
+            if dtype == 'numeric':
+                dfi[col] = dfi[col].apply(clean_value)
+            elif dtype == 'date':
+                dfi[col] = dfi[col].apply(lambda x: clean_value(x, date_format=True))
+            else:
+                dfi[col] = dfi[col].replace(filter_bad_value, np.nan)
+    print(df1)
+    print(df2)
