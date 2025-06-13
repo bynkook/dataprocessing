@@ -43,7 +43,7 @@ def type_of_column(col):
             return dtype
     return 'string'
 
-if __name__ == ""__main__"":
+if __name__ == "__main__":
     filter_bad_value = ["", "none", "null", "nan", "-", "*"]
     column_name_map = {
         'numeric': ['_no', '_amt', '_rat'],
