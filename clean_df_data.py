@@ -10,27 +10,28 @@ Last updated: 2025-06-13 22:00:00
 5. any filter application it shall be case-insensitive.
 """
 
-# user-defined filters
+# user-defined filter and format
 filter_bad_value = ["", "none", "null", "nan", "-", "*"]
-column_name_map = {
+filter_date = ['%Y%m%d%H%M%S', '%Y%m%d', '%Y%m', None]     # None for fallback
+filter_column_name = {
     'numeric': ['_no', '_amt', '_rat'],
-    'date': ['_ym', '_dtc', '_dtm'],
+    'date': ['_ym', '_dtc', '_dtm']
 }
+
 
 def clean_value(val, date_format=False):
     """
-    Clean value to numeric or datetime format, handling known invalid entries.
-    Dates are normalized to YYYY-MM-DD.
-    """
+    Convert value in DataFrame to numeric or datetime format, handling known invalid entries.
+    Extra care required when your data storage is unable to handle pandas datetime format.
+    """ 
     if pd.isna(val):
         return pd.NaT if date_format else np.nan
     if isinstance(val, str):
         val = val.strip()
         if val.lower() in [v.lower() for v in filter_bad_value]:
             return pd.NaT if date_format else np.nan
-    if date_format:
-        date_formats = ['%Y%m%d%H%M%S', '%Y%m%d', '%Y%m', None]     # None for fallback
-        for fmt in date_formats:
+    if date_format:        
+        for fmt in filter_date:
             try:
                 dt = pd.to_datetime(val, format=fmt, errors='coerce')
                 if not pd.isna(dt):
@@ -46,27 +47,27 @@ def clean_value(val, date_format=False):
 def type_of_column(col):
     lname = col.lower()
     for dtype in ['date', 'numeric']:
-        if any(k in lname for k in column_name_map[dtype]):
+        if any(k in lname for k in filter_column_name[dtype]):
             return dtype
     return 'string'
 
 if __name__ == "__main__":
     
     df1 = pd.DataFrame({
-        'col_NO1': [1, 2, 3,'4-'],
-        'col_ym1': ['202501', '20250301','2025-03-02', np.nan],
-        'col_str1': ['a', '*', 'c', 1]
+        'col_NO1': [1, 2, 3,'4-', 5],
+        'col_ym1': [202501, '202502', '20250301','2025-03-02', np.nan],
+        'col_str1': ['a', '*', 'c', 1, '#8#']
     })
     df2 = pd.DataFrame({
-        'col_no2': [1, '2', 3,'4*'],
-        'col_ym2': ['20250101141414', '2025-03-01 14:14:14', '2025010216', None],
-        'col_str2': ['a', '-', 'c', 2]
+        'col_no2': [1, '2', 3,'4*', 5],
+        'col_ym2': [20250101121212, '20250101141414', '2025-03-01 14:14:14', '2025010216', None],
+        'col_str2': ['a', '-', 'c', 2, '&&7']
     })
     df_list = [df1, df2]
     for idx, dfi in enumerate(df_list):
         col_type_map = {col: type_of_column(col) for col in dfi.columns}
         if len(set(dfi.columns)) != len(set(col_type_map)):
-            print(f"WARNING: Column classification issue in df{idx}")
+            print(f"WARNING: column filtering has issue in df{idx}")
         for col, dtype in col_type_map.items():
             if dtype == 'numeric':
                 dfi[col] = dfi[col].apply(clean_value)
